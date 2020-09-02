@@ -35,7 +35,7 @@ class MainGame():
         # Update the whole screen
         pygame.display.flip()
 
-        # Regulate FPS (Frames per second)
+        # Regulate FPS (Frames per second).
         self.clock.tick(60)
 
     def event_check(self):
