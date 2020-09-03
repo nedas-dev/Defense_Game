@@ -3,23 +3,38 @@ import math
 class Tower1():
 
     def __init__(self, game, pos_x, pos_y):
+        # Gaining access to all variables in main game file
         self.main_game = game
         self.screen = game.screen
+
+        # Creating an empty list for level 1 tower's images
         self.level1_tower = []
+
+        # Coordinates for setting up a tower on the background
         self.pos_x = pos_x
         self.pos_y = pos_y
+
+        # Setting up level 1 tower
         self.setup_level1()
+
+        # Initializing radar to see the range of the tower
         self.radar_setup()
+
+        # For radar to show up we create a bool
         self.active = False
+
+        # Settings for shotting the enemys, making damage
         self.fire_count = 0
-        self.shot_fire_animation()
+        self.shot_fire_animation_setup()
         self.locked_x = None
         self.locked_y = None
 
     def update(self):
+        ''' Updating the shooting range. '''
         self.shoot_range()
 
     def draw(self):
+        ''' Drawying everything on the screen. '''
         if self.active:
             self.screen.blit(self.circle, self.circle_rect)
 
@@ -34,6 +49,7 @@ class Tower1():
         self.screen.blit(self.shot, self.shot_rect)
 
     def setup_level1(self):
+        ''' Initializing tower's level 1. '''
         tower_body_image = pygame.transform.scale(pygame.image.load(
             'images_final/Towers/PNG/3.png').convert_alpha(), (75, 85))
         top_part_image = pygame.transform.scale(pygame.image.load(
@@ -56,6 +72,7 @@ class Tower1():
             center=(self.pos_x - 2, self.pos_y - 10))
 
     def radar_setup(self):
+        ''' Initializing radar for tower. '''
         self.circle = pygame.transform.scale(pygame.image.load(
             'images_final/Towers/PNG/65.png').convert_alpha(), (300, 300))
         self.circle_rect = self.circle.get_rect(
@@ -82,7 +99,7 @@ class Tower1():
             self.fire_count = 0
 
     def shoot(self, enemy):
-        ''' Shooting an enemy. '''
+        ''' Making damage to an enemy. '''
         enemy.hp -= 0.10
 
         self.shot_fired(enemy)
@@ -92,14 +109,15 @@ class Tower1():
             self.fire_count = 0
             self.main_game.enemies.remove(enemy)
 
-    def shot_fire_animation(self):
-
+    def shot_fire_animation_setup(self):
+        ''' Animation of damage made for the enemies. '''
         self.shot = pygame.transform.scale(pygame.image.load(
             'images_final/Towers/PNG/40.png').convert_alpha(), (20, 20))
         self.shot_rect = self.shot.get_rect(
             center=(self.rect2.centerx - 2, self.rect2.top - 8))
 
     def reset_rock_position(self):
+        ''' Resetting stone's location. '''
         self.shot_rect = self.shot.get_rect(
             center=(self.rect2.centerx - 2, self.rect2.top - 8))
 
