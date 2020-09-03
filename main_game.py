@@ -53,6 +53,9 @@ class MainGame():
                     self.create_enemy()
                 elif event.key == pygame.K_l:
                     print(len(self.enemies))
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                self.activate_tower_upgrade_screen(mouse_pos)
 
     def create_enemy(self):
         ''' Creating an enemy. '''
@@ -84,6 +87,14 @@ class MainGame():
 
         for tower in self.towers:
             tower.update()
+
+    def activate_tower_upgrade_screen(self, mouse_pos):
+        for tower in self.towers:
+            if tower.rect2.collidepoint(mouse_pos):
+                if not tower.active:
+                    tower.active = True
+                else:
+                    tower.active = False
 
 
 if __name__ == '__main__':
