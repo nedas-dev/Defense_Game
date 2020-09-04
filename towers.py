@@ -31,6 +31,7 @@ class Tower1():
 
         #
         self.tower_active = False
+        self.damage = float(0.10)
 
     def update(self):
         ''' Updating the shooting range. '''
@@ -76,6 +77,28 @@ class Tower1():
         self.rect3 = self.image3.get_rect(
             center=(self.pos_x - 2, self.pos_y - 10))
 
+    def setup_level2(self):
+        ''' Initializing tower's level 2. '''
+        tower_body_image = pygame.transform.scale(pygame.image.load(
+            'images_final/Towers/PNG/6.png').convert_alpha(), (75, 85))
+
+        self.image2 = tower_body_image
+        self.damage = float(0.15)
+
+    def setup_level3(self):
+        ''' Initializing tower's level 3. '''
+        tower_body_image = pygame.transform.scale(pygame.image.load(
+            'images_final/Towers/PNG/7.png').convert_alpha(), (75, 85))
+        top_part_image = pygame.transform.scale(pygame.image.load(
+            'images_final/Towers/PNG/4.png').convert_alpha(), (65, 20))
+        bottom_part_image = pygame.transform.scale(pygame.image.load(
+            'images_final/Towers/PNG/5.png').convert_alpha(), (65, 20))
+
+        self.image1 = top_part_image
+        self.image2 = tower_body_image
+        self.image3 = bottom_part_image
+        self.damage = float(0.25)
+
     def radar_setup(self):
         ''' Initializing radar for tower. '''
         self.circle = pygame.transform.scale(pygame.image.load(
@@ -106,7 +129,7 @@ class Tower1():
 
     def shoot(self, enemy):
         ''' Making damage to an enemy. '''
-        enemy.hp -= 0.10
+        enemy.hp -= self.damage
 
         self.shot_fired(enemy)
 
@@ -128,8 +151,10 @@ class Tower1():
 
     def shot_fired(self, enemy):
         if self.fire_count == 0:
-            self.locked_x = (enemy.rect.centerx - self.shot_rect.x) / 30
-            self.locked_y = (enemy.rect.centery - self.shot_rect.y) / 30
+            self.locked_x = (enemy.rect.centerx -
+                             self.shot_rect.x) / 30
+            self.locked_y = (enemy.rect.centery -
+                             self.shot_rect.y) / 30
 
         if self.fire_count == 25:
             self.reset_rock_position()

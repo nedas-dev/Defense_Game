@@ -54,16 +54,13 @@ class MainGame():
                 if event.key == pygame.K_q:
                     sys.exit()
                 elif event.key == pygame.K_k:
-                    self.create_tower()
+                    pass
                 elif event.key == pygame.K_j:
                     self.create_enemy()
-                elif event.key == pygame.K_l:
-                    print(len(self.enemies))
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 self.activate_tower_upgrade_screen(event.pos)
                 self.tower_menu.check_collision(event.pos)
-
             if event.type == pygame.MOUSEMOTION:
                 if self.selected_tower:
                     self.selected_tower.rect2.center = event.pos
@@ -115,7 +112,8 @@ class MainGame():
             if tower.rect2.collidepoint(mouse_pos):
                 if not tower.circle_active:
                     tower.circle_active = True
-                else:
+            else:
+                if tower.circle_active:
                     tower.circle_active = False
 
 
