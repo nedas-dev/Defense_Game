@@ -17,11 +17,8 @@ class Tower1():
         # Setting up level 1 tower
         self.setup_level1()
 
-        # Initializing radar to see the range of the tower
-        self.radar_setup()
-
         # For radar to show up we create a bool
-        self.active = False
+        self.circle_active = False
 
         # Settings for shotting the enemys, making damage
         self.fire_count = 0
@@ -29,13 +26,21 @@ class Tower1():
         self.locked_x = None
         self.locked_y = None
 
+        self.rect_around_icon = pygame.Rect((0, 0), (54, 52))
+        self.rect_around_icon.center = (362, 537)
+
+        #
+        self.tower_active = False
+
     def update(self):
         ''' Updating the shooting range. '''
         self.shoot_range()
+        if not self.tower_active:
+            self.update_tower_location()
 
     def draw(self):
         ''' Drawying everything on the screen. '''
-        if self.active:
+        if self.circle_active:
             self.screen.blit(self.circle, self.circle_rect)
 
         for ind in range(3):
@@ -76,27 +81,28 @@ class Tower1():
         self.circle = pygame.transform.scale(pygame.image.load(
             'images_final/Towers/PNG/65.png').convert_alpha(), (300, 300))
         self.circle_rect = self.circle.get_rect(
-            center=(self.pos_x, self.pos_y))
+            center=(self.rect2.center))
 
     def shoot_range(self):
-        ''' Calculating the shooting range. '''
-        if len(self.main_game.enemies) == 0:
-            self.reset_rock_position()
+        if self.tower_active:
+            ''' Calculating the shooting range. '''
+            if len(self.main_game.enemies) == 0:
+                self.reset_rock_position()
 
-        number = 0
-        for enemy in self.main_game.enemies:
-            x = abs(self.pos_x - enemy.rect.centerx)
-            y = abs(self.pos_y - enemy.rect.centery)
-            xy = math.sqrt(x ** 2 + y ** 2)
-            if xy <= 130:
-                self.shoot(enemy)
-                break
-            else:
-                number += 1
-                continue
-        if len(self.main_game.enemies) == number:
-            self.reset_rock_position()
-            self.fire_count = 0
+            number = 0
+            for enemy in self.main_game.enemies:
+                x = abs(self.pos_x - enemy.rect.centerx)
+                y = abs(self.pos_y - enemy.rect.centery)
+                xy = math.sqrt(x ** 2 + y ** 2)
+                if xy <= 130:
+                    self.shoot(enemy)
+                    break
+                else:
+                    number += 1
+                    continue
+            if len(self.main_game.enemies) == number:
+                self.reset_rock_position()
+                self.fire_count = 0
 
     def shoot(self, enemy):
         ''' Making damage to an enemy. '''
@@ -118,8 +124,7 @@ class Tower1():
 
     def reset_rock_position(self):
         ''' Resetting stone's location. '''
-        self.shot_rect = self.shot.get_rect(
-            center=(self.rect2.centerx - 2, self.rect2.top - 8))
+        self.shot_rect.center = (self.rect2.centerx - 2, self.rect2.top - 8)
 
     def shot_fired(self, enemy):
         if self.fire_count == 0:
@@ -133,5 +138,12 @@ class Tower1():
 
         self.shot_rect.x += self.locked_x
         self.shot_rect.y += self.locked_y
-
         self.fire_count += 1
+
+    def update_tower_location(self):
+        self.rect1.center = (self.rect2.centerx - 2, self.rect2.centery - 30)
+        self.rect3.center = (self.rect2.centerx - 2, self.rect2.centery - 10)
+        self.reset_rock_position()
+
+    def activate_circle(self):
+        self.circle_rect.center = self.rect2.center
