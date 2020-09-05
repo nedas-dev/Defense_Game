@@ -1,5 +1,7 @@
 import pygame
 import math
+
+
 class Tower1():
 
     def __init__(self, game, pos_x, pos_y):
@@ -7,13 +9,14 @@ class Tower1():
         self.main_game = game
         self.screen = game.screen
 
-        # Creating an empty list for level 1 tower's images
-        self.level1_tower = []
-
+        # Creating an empty list for tower's images
+        self.tower = []
+        self.level = 1
         # Coordinates for setting up a tower on the background
         self.pos_x = pos_x
         self.pos_y = pos_y
 
+        self.delete = False
         # Setting up level 1 tower
         self.setup_level1()
 
@@ -33,6 +36,10 @@ class Tower1():
         self.tower_active = False
         self.damage = float(0.10)
 
+        #
+        self._check_for_money()
+        self._upload_upgrade_tower_images()
+
     def update(self):
         ''' Updating the shooting range. '''
         self.shoot_range()
@@ -43,6 +50,8 @@ class Tower1():
         ''' Drawying everything on the screen. '''
         if self.circle_active:
             self.screen.blit(self.circle, self.circle_rect)
+            self.screen.blit(self.upgrade_img, self.upgrade_img_rect)
+            self._update_n_draw_tower_upgrade()
 
         for ind in range(3):
             if ind == 0:
@@ -63,27 +72,29 @@ class Tower1():
         bottom_part_image = pygame.transform.scale(pygame.image.load(
             'images_final/Towers/PNG/2.png').convert_alpha(), (65, 20))
 
-        self.level1_tower.append(top_part_image)
-        self.level1_tower.append(tower_body_image)
-        self.level1_tower.append(bottom_part_image)
+        self.tower.append(top_part_image)
+        self.tower.append(tower_body_image)
+        self.tower.append(bottom_part_image)
 
-        self.image1 = self.level1_tower[0]
-        self.image2 = self.level1_tower[1]
-        self.image3 = self.level1_tower[2]
+        self.image1 = self.tower[0]
+        self.image2 = self.tower[1]
+        self.image3 = self.tower[2]
 
         self.rect1 = self.image1.get_rect(
             center=(self.pos_x - 2, self.pos_y - 30))
         self.rect2 = self.image2.get_rect(center=(self.pos_x, self.pos_y))
         self.rect3 = self.image3.get_rect(
             center=(self.pos_x - 2, self.pos_y - 10))
+        self.cost = 500
 
     def setup_level2(self):
         ''' Initializing tower's level 2. '''
         tower_body_image = pygame.transform.scale(pygame.image.load(
             'images_final/Towers/PNG/6.png').convert_alpha(), (75, 85))
-
+        self.level = 2
         self.image2 = tower_body_image
         self.damage = float(0.15)
+        self.cost = 1000
 
     def setup_level3(self):
         ''' Initializing tower's level 3. '''
@@ -93,11 +104,12 @@ class Tower1():
             'images_final/Towers/PNG/4.png').convert_alpha(), (65, 20))
         bottom_part_image = pygame.transform.scale(pygame.image.load(
             'images_final/Towers/PNG/5.png').convert_alpha(), (65, 20))
-
+        self.level = 3
         self.image1 = top_part_image
         self.image2 = tower_body_image
         self.image3 = bottom_part_image
         self.damage = float(0.25)
+        self.cost = 1500
 
     def radar_setup(self):
         ''' Initializing radar for tower. '''
@@ -137,6 +149,7 @@ class Tower1():
             self.reset_rock_position()
             self.fire_count = 0
             self.main_game.enemies.remove(enemy)
+            self.main_game.money += 50
 
     def shot_fire_animation_setup(self):
         ''' Animation of damage made for the enemies. '''
@@ -169,6 +182,43 @@ class Tower1():
         self.rect1.center = (self.rect2.centerx - 2, self.rect2.centery - 30)
         self.rect3.center = (self.rect2.centerx - 2, self.rect2.centery - 10)
         self.reset_rock_position()
+        self.upgrade_img_rect = self.upgrade_img.get_rect(
+            midbottom=(self.rect2.midtop))
+        self.upgrade_img_rect.y -= 20
+
+        if self.delete == True:
+            del self.main_game.towers[-1]
 
     def activate_circle(self):
         self.circle_rect.center = self.rect2.center
+
+    def _check_for_money(self):
+        if self.main_game.money >= self.cost:
+            self.main_game.money -= self.cost
+        else:
+            self.delete = True
+
+    def _upload_upgrade_tower_images(self):
+        self.upgrade_img = pygame.transform.scale(pygame.image.load(
+            'images_final/Towers/Upgrade_tower/rock.png').convert_alpha(), (60, 90))
+        self.upgrade_img_rect = self.upgrade_img.get_rect(
+            midbottom=(self.rect2.midtop))
+
+        self.upgrade_font = pygame.font.SysFont('metallord', 12)
+        self.upgrade_font_surface = self.upgrade_font.render(
+            f'{self.cost + 500}', True, (255, 200, 0))
+        self.upgrade_font_rect = self.upgrade_font_surface.get_rect(
+            bottomleft=(self.upgrade_img_rect.bottomleft))
+
+    def _update_n_draw_tower_upgrade(self):
+        self.upgrade_font_surface = self.upgrade_font.render(
+            f'{self.cost + 500}', True, (255, 200, 0))
+        self.upgrade_font_rect = self.upgrade_font_surface.get_rect(
+            bottomleft=(self.upgrade_img_rect.bottomleft))
+        self.upgrade_font_rect.x += 6
+        self.upgrade_font_rect.y -= 10
+        self.screen.blit(self.upgrade_font_surface, self.upgrade_font_rect)
+
+    def _check_upgrade_collision(self, mouse_pos):
+        if self.upgrade_img_rect.collidepoint(mouse_pos):
+            print('yes')

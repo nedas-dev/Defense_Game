@@ -72,6 +72,8 @@ class Enemy1():
         # Removing the enemy from the list when it is no longer on the screen
         if self.counter + 1 == len(path):
             self.main_game.enemies.remove(self)
+            self.main_game.lives -= 1
+            self.main_game._update_lives_images()
 
         return pot_xx
 
