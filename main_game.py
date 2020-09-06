@@ -21,12 +21,15 @@ class MainGame():
 
         self.path = [(-10, 457), (96, 458), (147, 418), (170, 357), (204, 289), (273, 266), (328, 232), (350, 150), (392, 92), (470, 77), (574, 74), (655, 58), (710, 62), (799, 68),
                      (865, 77), (910, 98), (932, 139), (929, 188), (905, 224), (832, 261), (769, 284), (749, 321), (772, 383), (786, 439), (843, 454), (903, 470), (926, 514), (929, 580), (929, 630), (929, 700)]
-
+        self.available_spots = [pygame.Rect((230,320),(81,151)), pygame.Rect((13,352),(95,50)),
+                                pygame.Rect((425,123), (187,55)), pygame.Rect((781, 125), (79,82)),
+                                pygame.Rect((562,301),(133,79)), pygame.Rect((816,320),(130,85)),
+                                pygame.Rect((741,506), (129,88)), pygame.Rect((90,287), (50,70))]
         self.enemies = []
         self.towers = []
 
         self.lives = 10
-        self.money = 1000
+        self.money = 100000
 
         # Creating an instance of tower1
         self.tower1 = Tower1(self, -100, -100)
@@ -39,6 +42,8 @@ class MainGame():
         self._setup_font()
         self.game_over = GameOver(self)
         self._upload_star()
+        self.rectangle = []
+        self.squares = []
 
     def run_game(self):
         # Main game loop
@@ -73,7 +78,7 @@ class MainGame():
                 if event.key == pygame.K_q:
                     sys.exit()
                 elif event.key == pygame.K_k:
-                    pass
+                    print(self.squares)
                 elif event.key == pygame.K_j:
                     self._create_enemy()
 
@@ -122,6 +127,20 @@ class MainGame():
         # Draw lives image
         self.screen.blit(self.lives_img, self.lives_img_rect)
         self.screen.blit(self.heart_img, self.heart_img_rect)
+
+        if len(self.rectangle) == 2:
+            width = abs(self.rectangle[0][0] - self.rectangle[1][0])
+            height = abs(self.rectangle[0][1] - self.rectangle[1][1])
+            surf = pygame.Surface((width, height))
+            surf_rect = surf.get_rect(topleft=(self.rectangle[0]))
+            pygame.draw.rect(self.screen, (0, 0, 0), surf_rect)
+            self.squares.append(surf_rect)
+            self.rectangle.clear()
+
+        if self.selected_tower:
+            for rect in self.available_spots:
+                if rect.collidepoint((self.selected_tower.rect2.centerx, self.selected_tower.rect2.bottom-20)):
+                    pygame.draw.rect(self.screen, (192, 192, 192), rect, width=3)
 
         # Draw money image
         self.screen.blit(self.star_img, self.star_rect)

@@ -20,6 +20,7 @@ class Tower1():
         self.delete = False
 
         self.cost = 500
+        self.cost_history = self.cost
         self._check_for_money()
         # Setting up level 1 tower
         self.setup_level1()
@@ -42,12 +43,18 @@ class Tower1():
 
         #
         self._upload_upgrade_tower_images()
+        #
+        self.plus = 0
 
     def update(self):
         ''' Updating the shooting range. '''
         self.shoot_range()
         if not self.tower_active:
             self.update_tower_location()
+        else:
+            if self.plus == 0:
+                self.plus += 1
+                self._check_if_spawn_is_available()
 
     def draw(self):
         ''' Drawying everything on the screen. '''
@@ -238,3 +245,10 @@ class Tower1():
             self.delete = True
         else:
             self.main_game.money -= self.cost
+
+    def _check_if_spawn_is_available(self):
+        for rect in self.main_game.available_spots:
+            if rect.collidepoint((self.rect2.centerx, self.rect2.bottom-20)):
+                return
+        del self.main_game.towers[-1]
+        self.main_game.money += self.cost_history
