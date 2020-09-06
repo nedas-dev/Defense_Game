@@ -12,11 +12,15 @@ class Tower1():
         # Creating an empty list for tower's images
         self.tower = []
         self.level = 1
+        self.max = False
         # Coordinates for setting up a tower on the background
         self.pos_x = pos_x
         self.pos_y = pos_y
 
         self.delete = False
+
+        self.cost = 500
+        self._check_for_money()
         # Setting up level 1 tower
         self.setup_level1()
 
@@ -37,7 +41,6 @@ class Tower1():
         self.damage = float(0.10)
 
         #
-        self._check_for_money()
         self._upload_upgrade_tower_images()
 
     def update(self):
@@ -50,8 +53,9 @@ class Tower1():
         ''' Drawying everything on the screen. '''
         if self.circle_active:
             self.screen.blit(self.circle, self.circle_rect)
-            self.screen.blit(self.upgrade_img, self.upgrade_img_rect)
-            self._update_n_draw_tower_upgrade()
+            if not self.max:
+                self.screen.blit(self.upgrade_img, self.upgrade_img_rect)
+                self._update_n_draw_tower_upgrade()
 
         for ind in range(3):
             if ind == 0:
@@ -85,7 +89,7 @@ class Tower1():
         self.rect2 = self.image2.get_rect(center=(self.pos_x, self.pos_y))
         self.rect3 = self.image3.get_rect(
             center=(self.pos_x - 2, self.pos_y - 10))
-        self.cost = 500
+        self.cost = 1000
 
     def setup_level2(self):
         ''' Initializing tower's level 2. '''
@@ -94,7 +98,8 @@ class Tower1():
         self.level = 2
         self.image2 = tower_body_image
         self.damage = float(0.15)
-        self.cost = 1000
+        self.cost = 1500
+        self.main_game.money -= 1000
 
     def setup_level3(self):
         ''' Initializing tower's level 3. '''
@@ -109,7 +114,8 @@ class Tower1():
         self.image2 = tower_body_image
         self.image3 = bottom_part_image
         self.damage = float(0.25)
-        self.cost = 1500
+        self.main_game.money -= 1500
+        self.max = True
 
     def radar_setup(self):
         ''' Initializing radar for tower. '''
@@ -194,7 +200,7 @@ class Tower1():
 
     def _check_for_money(self):
         if self.main_game.money >= self.cost:
-            self.main_game.money -= self.cost
+            self.main_game.money -= self.cost - 500
         else:
             self.delete = True
 
@@ -206,13 +212,13 @@ class Tower1():
 
         self.upgrade_font = pygame.font.SysFont('metallord', 12)
         self.upgrade_font_surface = self.upgrade_font.render(
-            f'{self.cost + 500}', True, (255, 200, 0))
+            f'{self.cost}', True, (255, 200, 0))
         self.upgrade_font_rect = self.upgrade_font_surface.get_rect(
             bottomleft=(self.upgrade_img_rect.bottomleft))
 
     def _update_n_draw_tower_upgrade(self):
         self.upgrade_font_surface = self.upgrade_font.render(
-            f'{self.cost + 500}', True, (255, 200, 0))
+            f'{self.cost}', True, (255, 200, 0))
         self.upgrade_font_rect = self.upgrade_font_surface.get_rect(
             bottomleft=(self.upgrade_img_rect.bottomleft))
         self.upgrade_font_rect.x += 6
@@ -221,4 +227,14 @@ class Tower1():
 
     def _check_upgrade_collision(self, mouse_pos):
         if self.upgrade_img_rect.collidepoint(mouse_pos):
-            print('yes')
+            if self.cost <= self.main_game.money:
+                if self.level == 1:
+                    self.setup_level2()
+                elif self.level == 2:
+                    self.setup_level3()
+
+    def _check_for_money(self):
+        if self.cost > self.main_game.money:
+            self.delete = True
+        else:
+            self.main_game.money -= self.cost

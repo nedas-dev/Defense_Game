@@ -15,5 +15,6 @@ class GameOver():
             (self.main_game.rect.centerx - 35, self.main_game.rect.centery + 85), (81, 82))
 
     def _checking_collision_with_restart_button(self, mouse_pos):
-        if self.restart_button_rect.collidepoint(mouse_pos):
-            self.main_game._reset_game(mouse_pos)
+        if self.game_over == True:
+            if self.restart_button_rect.collidepoint(mouse_pos):
+                self.main_game._reset_game()

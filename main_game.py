@@ -17,7 +17,7 @@ class MainGame():
         self.screen = pygame.display.set_mode(
             (self.settings.screen_width, self.settings.screen_height))
         self.rect = self.screen.get_rect()
-        pygame.display.set_caption('Tower Defense')
+        pygame.display.set_caption('Town Defense')
 
         self.path = [(-10, 457), (96, 458), (147, 418), (170, 357), (204, 289), (273, 266), (328, 232), (350, 150), (392, 92), (470, 77), (574, 74), (655, 58), (710, 62), (799, 68),
                      (865, 77), (910, 98), (932, 139), (929, 188), (905, 224), (832, 261), (769, 284), (749, 321), (772, 383), (786, 439), (843, 454), (903, 470), (926, 514), (929, 580), (929, 630), (929, 700)]
@@ -196,7 +196,9 @@ class MainGame():
         self.enemies.clear()
         self.game_over.game_over = False
         self.lives = 10
+        self._update_lives_images()
         self.money = 1000
+        self._draw_update_font()
 
     def _setup_font(self):
         self.beautiful = pygame.font.SysFont('metallord', 40)
