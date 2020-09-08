@@ -2,25 +2,29 @@ import pygame
 import sys
 
 from settings import Settings
-from enemies import Enemy1
-from towers import Tower1
+from enemies import Enemy1, Enemy2, Enemy3, Enemy4
+from towers import Tower1, Tower2, Tower3, Tower4
 from upgrade_bars import TowerMenu
 from game_over import GameOver
+from start_game import StartGame
+from won_game import WonGame
 
 class MainGame():
 
     def __init__(self):
         ''' Initializing the game, setting up display '''
         pygame.init()
+
         self.clock = pygame.time.Clock()
         self.settings = Settings()
         self.screen = pygame.display.set_mode(
             (self.settings.screen_width, self.settings.screen_height))
         self.rect = self.screen.get_rect()
-        pygame.display.set_caption('Town Defense')
+        pygame.display.set_caption('Tower Defense')
 
-        self.path = [(-10, 457), (96, 458), (147, 418), (170, 357), (204, 289), (273, 266), (328, 232), (350, 150), (392, 92), (470, 77), (574, 74), (655, 58), (710, 62), (799, 68),
-                     (865, 77), (910, 98), (932, 139), (929, 188), (905, 224), (832, 261), (769, 284), (749, 321), (772, 383), (786, 439), (843, 454), (903, 470), (926, 514), (929, 580), (929, 630), (929, 700)]
+        self.path = [(-10, 447), (96, 448), (147, 418), (170, 357), (204, 289), (273, 266), (328, 232), (350, 150), (392, 92), (470, 64), (574, 64), (655, 58), (710, 52), (799, 58),
+                     (865, 67), (920, 93), (947, 139), (929, 188), (905, 224), (832, 261), (769, 284), (765, 321), (790, 383), (796, 429), (843, 454), (915, 464), (937, 514), (949, 580), (949, 630), (949, 700)]
+
         self.available_spots = [pygame.Rect((230,320),(81,151)), pygame.Rect((13,352),(95,50)),
                                 pygame.Rect((425,123), (187,55)), pygame.Rect((781, 125), (79,82)),
                                 pygame.Rect((562,301),(133,79)), pygame.Rect((816,320),(130,85)),
@@ -29,34 +33,30 @@ class MainGame():
         self.towers = []
 
         self.lives = 10
-        self.money = 100000
+        self.money = 10000
 
-        # Creating an instance of tower1
-        self.tower1 = Tower1(self, -100, -100)
-        self.money += 500
-
-        self.tower_menu = TowerMenu(self)
-
-        self.selected_tower = None
-        self._setup_lives_images()
-        self._setup_font()
-        self.game_over = GameOver(self)
-        self._upload_star()
-        self.rectangle = []
-        self.squares = []
+        self._important_setup()
 
     def run_game(self):
         # Main game loop
         while True:
             self.event_check()
 
-            if not self.game_over.game_over:
+            if not self.game_over.game_over and self.start_game.active_game and not self.won_game.won_active:
                 self.update_images()
                 self.draw_images()
                 self._draw_update_font()
-            else:
+                if self.enemies:
+                    print(self.path[self.enemies[0].counter])
+            elif self.game_over.game_over:
                 self.screen.blit(self.game_over.game_over_img,
                                  self.game_over.game_over_rect)
+            elif not self.start_game.active_game:
+                self.screen.blit(self.start_game.main_image, (0,0))
+                self.start_game.draw()
+            elif self.won_game.won_active:
+                self.won_game.draw()
+
 
             self.update_screen()
 
@@ -78,16 +78,23 @@ class MainGame():
                 if event.key == pygame.K_q:
                     sys.exit()
                 elif event.key == pygame.K_k:
-                    print(self.squares)
+                    self._create_enemy('enemy2')
                 elif event.key == pygame.K_j:
-                    self._create_enemy()
+                    self._create_enemy('enemy1')
+                elif event.key == pygame.K_h:
+                    self._create_enemy('enemy3')
+                elif event.key == pygame.K_g:
+                    self._create_enemy('enemy4')
 
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 position = event.pos
+                print(position)
                 self._tower_upgrade_collision(event.pos)
                 self._selected_tower_control(event.type, position)
                 self.game_over._checking_collision_with_restart_button(
                     position)
+                self.start_game._pressing_buttons(position)
+
             if event.type == pygame.MOUSEMOTION:
                 position = event.pos
                 self._selected_tower_control(event.type, position)
@@ -96,20 +103,43 @@ class MainGame():
                 position = event.pos
                 self._selected_tower_control(event.type, position)
 
-    def _create_enemy(self):
+    def _create_enemy(self, name):
         ''' Creating an enemy. '''
-
-        enemy = Enemy1(self, *self.path[0])
+        if name == 'enemy1':
+            enemy = Enemy1(self, *self.path[0])
+        elif name == 'enemy2':
+            enemy = Enemy2(self, *self.path[0])
+        elif name == 'enemy3':
+            enemy = Enemy3(self, *self.path[0])
+        elif name == 'enemy4':
+            enemy = Enemy4(self, *self.path[0])
         self.enemies.append(enemy)
 
-    def _create_tower(self):
+    def _create_tower(self, name):
         ''' Creating a tower '''
-        tower = Tower1(self, 362, 537)
-        self.towers.append(tower)
-        return tower
+        if name == 'Tower1':
+            tower1 = Tower1(self, 362, 537)
+            self.towers.append(tower1)
+            return tower1
+        elif name == 'Tower2':
+            tower2 = Tower2(self, 362, 537)
+            self.towers.append(tower2)
+            return tower2
+        elif name == 'Tower3':
+            tower3 = Tower3(self, 362, 537)
+            self.towers.append(tower3)
+            return tower3
+        elif name == 'Tower4':
+            tower4 = Tower4(self, 362, 537)
+            self.towers.append(tower4)
+            return tower4
 
     def update_images(self):
         ''' Updating every object/image in the game. '''
+
+        if not pygame.mixer.music.get_busy():
+            pygame.mixer.music.play(1)
+            pygame.mixer.music.queue('images_final/menu/music.mp3')
 
         if self.lives <= 0:
             self.game_over.game_over = True
@@ -127,15 +157,6 @@ class MainGame():
         # Draw lives image
         self.screen.blit(self.lives_img, self.lives_img_rect)
         self.screen.blit(self.heart_img, self.heart_img_rect)
-
-        if len(self.rectangle) == 2:
-            width = abs(self.rectangle[0][0] - self.rectangle[1][0])
-            height = abs(self.rectangle[0][1] - self.rectangle[1][1])
-            surf = pygame.Surface((width, height))
-            surf_rect = surf.get_rect(topleft=(self.rectangle[0]))
-            pygame.draw.rect(self.screen, (0, 0, 0), surf_rect)
-            self.squares.append(surf_rect)
-            self.rectangle.clear()
 
         if self.selected_tower:
             for rect in self.available_spots:
@@ -240,6 +261,35 @@ class MainGame():
             if tower.circle_active:
                 tower._check_upgrade_collision(mouse_pos)
 
+    def _important_setup(self):
+        # Creating an instance of tower1
+        self.tower1 = Tower1(self, -100, -100)
+        self.tower2 = Tower2(self, -100, -100)
+        self.tower3 = Tower3(self, -100, -100)
+        self.tower4 = Tower4(self, -100, -100)
+
+        self.money += int((self.tower1.cost_history + self.tower2.cost_history + self.tower3.cost_history + self.tower4.cost_history))
+
+        # Creating an instance of tower's menu
+        self.tower_menu = TowerMenu(self)
+
+        self.selected_tower = None
+        # Setting up lives images, font, game over setup, uploading
+                                # a star image for money
+        self._setup_lives_images()
+        self._setup_font()
+        self.game_over = GameOver(self)
+        self._upload_star()
+        self.squares = []
+        self.start_game = StartGame(self)
+        self._play_music()
+        self.won_game = WonGame(self)
+
+    def _play_music(self):
+        pygame.mixer.music.load('images_final/menu/music.mp3')
+        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.play(1)
+        pygame.mixer.music.queue('images_final/menu/music1.mp3')
 
 if __name__ == '__main__':
     thegame = MainGame()

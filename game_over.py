@@ -10,6 +10,8 @@ class GameOver():
         self.game_over_rect = self.game_over_img.get_rect(topleft=(0, 0))
         self._setup_game_over_restart_button()
 
+
+
     def _setup_game_over_restart_button(self):
         self.restart_button_rect = pygame.Rect(
             (self.main_game.rect.centerx - 35, self.main_game.rect.centery + 85), (81, 82))
