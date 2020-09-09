@@ -3,7 +3,7 @@ import math
 
 
 class Tower1():
-
+    ''' Tower 1. '''
     def __init__(self, game, pos_x, pos_y):
         # Gaining access to all variables in main game file
         self.main_game = game
@@ -11,39 +11,47 @@ class Tower1():
 
         # Creating an empty list for tower's images
         self.tower = []
+        # Setting the tower's level to 1.
         self.level = 1
+        # If self.level is equal to 3 it reaches it max.
         self.max = False
-        # Coordinates for setting up a tower on the background
+        # Coordinates for setting up a tower location on the background
         self.pos_x = pos_x
         self.pos_y = pos_y
-
+        # Bool to tell if the tower needs to be deleted.
         self.delete = False
-
+        # The cost of tower in level 1.
         self.cost = 500
+        # The original price of the tower at level 1.
         self.cost_history = self.cost
+        # Check if player has enough money to buy the tower.
         self._check_for_money()
         # Setting up level 1 tower
         self.setup_level1()
 
-        # For radar to show up we create a bool
+        # Bool to tell if the tower's circle around it is active.
         self.circle_active = False
 
-        # Settings for shotting the enemys, making damage
+        # Settings for shotting the enemy, making damage to it.
         self.fire_count = 0
         self.shot_fire_animation_setup()
         self.locked_x = None
         self.locked_y = None
 
+        # Invisible rect existing where the tower's icon is (in tower menu).
         self.rect_around_icon = pygame.Rect((0, 0), (54, 52))
         self.rect_around_icon.center = (362, 537)
 
-        #
+        # Variable to tell if the tower is active or not.
         self.tower_active = False
+        # Tower's damage to the enemies
         self.damage = float(0.08)
+        # Tower's damage multiplier when the tower is upgraded.
         self.damagex = 1.4
-        #
+
         self._upload_upgrade_tower_images()
-        #
+
+        # For one time use int variable.
         self.plus = 0
 
     def update(self):
@@ -57,7 +65,8 @@ class Tower1():
                 self._check_if_spawn_is_available()
 
     def draw(self):
-        ''' Drawying everything on the screen. '''
+        ''' Drawying all images of the tower on the screen/surface. '''
+
         if self.circle_active:
             self.screen.blit(self.circle, self.circle_rect)
             if not self.max:
@@ -132,8 +141,9 @@ class Tower1():
             center=(self.rect2.center))
 
     def shoot_range(self):
+        ''' Calculating the shooting range. '''
+
         if self.tower_active:
-            ''' Calculating the shooting range. '''
             if len(self.main_game.enemies) == 0:
                 self.reset_rock_position()
 
@@ -176,6 +186,7 @@ class Tower1():
         self.shot_rect.center = (self.rect2.centerx - 2, self.rect2.top - 8)
 
     def shot_fired(self, enemy):
+        ''' Calculating the distance between the enemie and the 'bullet'. '''
         if self.fire_count == 0:
             self.locked_x = (enemy.rect.centerx -
                              self.shot_rect.x) / 30
@@ -192,6 +203,8 @@ class Tower1():
         self.fire_count += 1
 
     def update_tower_location(self):
+        ''' Updating tower's location while it's being dragged to final destination. '''
+
         self.rect1.center = (self.rect2.centerx - 2, self.rect2.centery - 30)
         self.rect3.center = (self.rect2.centerx - 2, self.rect2.centery - 10)
         self.reset_rock_position()
@@ -203,15 +216,20 @@ class Tower1():
             del self.main_game.towers[-1]
 
     def activate_circle(self):
+        ''' Updating circle's location so it's center would be in the middle of the tower. '''
         self.circle_rect.center = self.rect2.center
 
     def _check_for_money(self):
+        ''' Checking if player has enough money to get the tower.'''
+
         if self.cost > self.main_game.money:
             self.delete = True
         else:
             self.main_game.money -= self.cost
 
     def _upload_upgrade_tower_images(self):
+        ''' Loading upgrade icon images to the game. '''
+
         self.upgrade_img = pygame.transform.scale(pygame.image.load(
             'images_final/Towers/Upgrade_tower/rock.png').convert_alpha(), (60, 90))
         self.upgrade_img_rect = self.upgrade_img.get_rect(
@@ -224,6 +242,8 @@ class Tower1():
             bottomleft=(self.upgrade_img_rect.bottomleft))
 
     def _update_n_draw_tower_upgrade(self):
+        ''' Updating and drawying tower's upgrade cost and it's image. '''
+
         self.upgrade_font_surface = self.upgrade_font.render(
             f'{self.cost}', True, (255, 200, 0))
         self.upgrade_font_rect = self.upgrade_font_surface.get_rect(
@@ -233,6 +253,9 @@ class Tower1():
         self.screen.blit(self.upgrade_font_surface, self.upgrade_font_rect)
 
     def _check_upgrade_collision(self, mouse_pos):
+        ''' Checking if there is collision between the tower's
+            upgrade image rect and player's mouse coordinates. '''
+
         if self.upgrade_img_rect.collidepoint(mouse_pos):
             if self.cost <= self.main_game.money:
                 if self.level == 1:
@@ -242,6 +265,8 @@ class Tower1():
 
 
     def _check_if_spawn_is_available(self):
+        ''' Checking if the location of the tower is available. '''
+
         for rect in self.main_game.available_spots:
             if rect.collidepoint((self.rect2.centerx, self.rect2.bottom - 20)):
                 return
@@ -268,6 +293,7 @@ class Tower1():
 #________________________________________________________________________________________________________
 #________________________________________________________________________________________________________
 class Tower2():
+    ''' Tower 2. '''
 
     def __init__(self, game, pos_x, pos_y):
         # Gaining access to all variables in main game file
@@ -276,40 +302,49 @@ class Tower2():
 
         # Creating an empty list for tower's images
         self.tower = []
+        # Setting the tower's level to 1.
         self.level = 1
+        # Bool to determine if tower's level is max yet.
         self.max = False
-        # Coordinates for setting up a tower on the background
+        # Coordinates for setting up a tower location on the background
         self.pos_x = pos_x
         self.pos_y = pos_y
-
+        # Bool to tell if the tower needs to be deleted.
         self.delete = False
-
+        # The cost of tower in level 1.
         self.cost = 700
+        # The original price of the tower at level 1.
         self.cost_history = self.cost
+        # Check if player has enough money to buy the tower.
         self._check_for_money()
         # Setting up level 1 tower
         self.setup_level1()
 
-        # For radar to show up we create a bool
+        # Bool to tell if the tower's circle around it is active.
         self.circle_active = False
 
-        # Settings for shotting the enemys, making damage
+        # Settings for shotting the enemy, making damage to it.
         self.fire_count = 0
         self.shot_fire_animation_setup()
         self.locked_x = None
         self.locked_y = None
 
+        # Invisible rect existing where the tower's icon is (in tower menu).
         self.rect_around_icon = pygame.Rect((0, 0), (54, 52))
         self.rect_around_icon.center = (156, 537)
 
-        #
+        # Variable to tell if the tower is active or not.
         self.tower_active = False
+        # Tower's damage to the enemies
         self.damage = float(0.12)
+        # Tower's damage multiplier when the tower is upgraded.
         self.damagex = 1.4
         #
         self._upload_upgrade_tower_images()
-        #
+
+        # For one time use int variable.
         self.plus = 0
+
 
     def update(self):
         ''' Updating the shooting range. '''
@@ -322,7 +357,8 @@ class Tower2():
                 self._check_if_spawn_is_available()
 
     def draw(self):
-        ''' Drawying everything on the screen. '''
+        ''' Drawying all images of the tower on the screen/surface. '''
+
         if self.circle_active:
             self.screen.blit(self.circle, self.circle_rect)
             if not self.max:
@@ -427,7 +463,7 @@ class Tower2():
             self.reset_rock_position()
             self.fire_count = 0
             self.main_game.enemies.remove(enemy)
-            self.main_game.money += 50
+            self.main_game.money += enemy.bonus
 
     def shot_fire_animation_setup(self):
         ''' Animation of damage made for the enemies. '''
@@ -441,6 +477,7 @@ class Tower2():
         self.shot_rect.center = (self.rect2.centerx - 2, self.rect2.top - 12)
 
     def shot_fired(self, enemy):
+        ''' Calculating the distance between the enemie and the 'bullet'. '''
         if self.fire_count == 0:
             self.locked_x = (enemy.rect.centerx -
                              self.shot_rect.x) / 30
@@ -457,6 +494,8 @@ class Tower2():
         self.fire_count += 1
 
     def update_tower_location(self):
+        ''' Updating tower's location while it's being dragged to final destination. '''
+
         self.rect1.center = (self.rect2.centerx - 2, self.rect2.centery - 28)
         self.rect3.center = (self.rect2.centerx - 2, self.rect2.centery - 18)
         self.reset_rock_position()
@@ -468,15 +507,20 @@ class Tower2():
             del self.main_game.towers[-1]
 
     def activate_circle(self):
+        ''' Updating circle's location so it's center would be in the middle of the tower. '''
         self.circle_rect.center = self.rect2.center
 
     def _check_for_money(self):
+        ''' Checking if player has enough money to get the tower.'''
+
         if self.cost > self.main_game.money:
             self.delete = True
         else:
             self.main_game.money -= self.cost
 
     def _upload_upgrade_tower_images(self):
+        ''' Loading upgrade icon images to the game. '''
+
         self.upgrade_img = pygame.transform.scale(pygame.image.load(
             'images_final/Towers/Upgrade_tower/fire.png').convert_alpha(), (60, 90))
         self.upgrade_img_rect = self.upgrade_img.get_rect(
@@ -489,6 +533,8 @@ class Tower2():
             bottomleft=(self.upgrade_img_rect.bottomleft))
 
     def _update_n_draw_tower_upgrade(self):
+        ''' Updating and drawying tower's upgrade cost and it's image. '''
+
         self.upgrade_font_surface = self.upgrade_font.render(
             f'{self.cost}', True, (255, 200, 0))
         self.upgrade_font_rect = self.upgrade_font_surface.get_rect(
@@ -498,6 +544,9 @@ class Tower2():
         self.screen.blit(self.upgrade_font_surface, self.upgrade_font_rect)
 
     def _check_upgrade_collision(self, mouse_pos):
+        ''' Checking if there is collision between the tower's
+            upgrade image rect and player's mouse coordinates. '''
+
         if self.upgrade_img_rect.collidepoint(mouse_pos):
             if self.cost <= self.main_game.money:
                 if self.level == 1:
@@ -506,6 +555,8 @@ class Tower2():
                     self.setup_level3()
 
     def _check_if_spawn_is_available(self):
+        ''' Checking if the location of the tower is available. '''
+
         for rect in self.main_game.available_spots:
             if rect.collidepoint((self.rect2.centerx, self.rect2.bottom - 20)):
                 return
@@ -533,6 +584,7 @@ class Tower2():
 #________________________________________________________________________________________________________
 
 class Tower3():
+    ''' Tower 3. '''
 
     def __init__(self, game, pos_x, pos_y):
         # Gaining access to all variables in main game file
@@ -541,21 +593,24 @@ class Tower3():
 
         # Creating an empty list for tower's images
         self.tower = []
+        # Setting the tower's level to 1.
         self.level = 1
+        # If self.level is equal to 3 it reaches it max.
         self.max = False
-        # Coordinates for setting up a tower on the background
+        # Coordinates for setting up a tower location on the background
         self.pos_x = pos_x
         self.pos_y = pos_y
-
+        # Bool to determine if the tower needs to be deleted.
         self.delete = False
-
+        # Current price of the tower in it's current level (1).
         self.cost = 500
+        # The original price of the tower in level 1.
         self.cost_history = self.cost
         self._check_for_money()
         # Setting up level 1 tower
         self.setup_level1()
 
-        # For radar to show up we create a bool
+        # Bool to tell if the tower's circle around it is active.
         self.circle_active = False
 
         # Settings for shotting the enemys, making damage
@@ -563,17 +618,19 @@ class Tower3():
         self.shot_fire_animation_setup()
         self.locked_x = None
         self.locked_y = None
-
+        # Coordinates for setting up a tower location on the background
         self.rect_around_icon = pygame.Rect((0, 0), (54, 52))
         self.rect_around_icon.center = (54, 537)
 
-        #
+        # Bool to determine if the tower is active or not.
         self.tower_active = False
+        # Tower's damage to the enemy.
         self.damage = float(0.10)
+        # Tower's damage multiplier when it is upgraded.
         self.damagex = 1.4
         #
         self._upload_upgrade_tower_images()
-        #
+        # One time use int variable.
         self.plus = 0
 
     def update(self):
@@ -587,7 +644,8 @@ class Tower3():
                 self._check_if_spawn_is_available()
 
     def draw(self):
-        ''' Drawying everything on the screen. '''
+        ''' Drawying all images of the tower on the screen/surface. '''
+
         if self.circle_active:
             self.screen.blit(self.circle, self.circle_rect)
             if not self.max:
@@ -670,8 +728,9 @@ class Tower3():
             center=(self.rect2.center))
 
     def shoot_range(self):
+        ''' Calculating the shooting range. '''
+
         if self.tower_active:
-            ''' Calculating the shooting range. '''
             if len(self.main_game.enemies) == 0:
                 self.reset_rock_position()
 
@@ -700,7 +759,7 @@ class Tower3():
             self.reset_rock_position()
             self.fire_count = 0
             self.main_game.enemies.remove(enemy)
-            self.main_game.money += 50
+            self.main_game.money += enemy.bonus
 
     def shot_fire_animation_setup(self):
         ''' Animation of damage made for the enemies. '''
@@ -714,6 +773,8 @@ class Tower3():
         self.shot_rect.center = (self.rect2.centerx - 2, self.rect2.top - 13)
 
     def shot_fired(self, enemy):
+        ''' Calculating the distance between the enemie and the 'bullet'. '''
+
         if self.fire_count == 0:
             self.locked_x = (enemy.rect.centerx -
                              self.shot_rect.x) / 30
@@ -730,6 +791,8 @@ class Tower3():
         self.fire_count += 1
 
     def update_tower_location(self):
+        ''' Updating tower's location while it's being dragged to final destination. '''
+
         self.rect1.center = (self.rect2.centerx - 2, self.rect2.centery - 27)
         self.rect3.center = (self.rect2.centerx - 2, self.rect2.centery - 10)
         self.reset_rock_position()
@@ -741,9 +804,13 @@ class Tower3():
             del self.main_game.towers[-1]
 
     def activate_circle(self):
+        ''' Updating circle's location so it's center would be in the middle of the tower. '''
+
         self.circle_rect.center = self.rect2.center
 
     def _upload_upgrade_tower_images(self):
+        ''' Loading upgrade icon images to the game. '''
+
         self.upgrade_img = pygame.transform.scale(pygame.image.load(
             'images_final/Towers/Upgrade_tower/grey_last_rock.png').convert_alpha(), (60, 90))
         self.upgrade_img_rect = self.upgrade_img.get_rect(
@@ -756,6 +823,8 @@ class Tower3():
             bottomleft=(self.upgrade_img_rect.bottomleft))
 
     def _update_n_draw_tower_upgrade(self):
+        ''' Updating and drawying tower's upgrade cost and it's image. '''
+
         self.upgrade_font_surface = self.upgrade_font.render(
             f'{self.cost}', True, (255, 200, 0))
         self.upgrade_font_rect = self.upgrade_font_surface.get_rect(
@@ -765,6 +834,9 @@ class Tower3():
         self.screen.blit(self.upgrade_font_surface, self.upgrade_font_rect)
 
     def _check_upgrade_collision(self, mouse_pos):
+        ''' Checking if there is collision between the tower's
+            upgrade image rect and player's mouse coordinates. '''
+
         if self.upgrade_img_rect.collidepoint(mouse_pos):
             if self.cost <= self.main_game.money:
                 if self.level == 1:
@@ -773,12 +845,16 @@ class Tower3():
                     self.setup_level3()
 
     def _check_for_money(self):
+        ''' Checking if player has enough money to get the tower.'''
+
         if self.cost > self.main_game.money:
             self.delete = True
         else:
             self.main_game.money -= self.cost
 
     def _check_if_spawn_is_available(self):
+        ''' Checking if the location of the tower is available. '''
+
         for rect in self.main_game.available_spots:
             if rect.collidepoint((self.rect2.centerx, self.rect2.bottom - 20)):
                 return
@@ -806,6 +882,7 @@ class Tower3():
 #________________________________________________________________________________________________________
 
 class Tower4():
+    ''' Tower 4. '''
 
     def __init__(self, game, pos_x, pos_y):
         # Gaining access to all variables in main game file
@@ -814,12 +891,15 @@ class Tower4():
 
         # Creating an empty list for tower's images
         self.tower = []
+
+        # Setting the tower to level 1.
         self.level = 1
+        # If self.level is equal to 3 it reaches it max.
         self.max = False
-        # Coordinates for setting up a tower on the background
+        # Coordinates for setting up a tower location on the background
         self.pos_x = pos_x
         self.pos_y = pos_y
-
+        # Bool to tell if the tower needs to be deleted.
         self.delete = False
 
         self.cost = 850
@@ -828,26 +908,30 @@ class Tower4():
         # Setting up level 1 tower
         self.setup_level1()
 
-        # For radar to show up we create a bool
+        # Bool to tell if the tower's circle around it is active.
         self.circle_active = False
 
-        # Settings for shotting the enemys, making damage
+        # Settings for shotting enemies and making damage to them.
         self.fire_count = 0
         self.shot_fire_animation_setup()
         self.locked_x = None
         self.locked_y = None
 
+        # Coordinates for setting up a tower location on the background
         self.rect_around_icon = pygame.Rect((0, 0), (54, 52))
         self.rect_around_icon.center = (260, 537)
 
-        #
+        # Bool to determine if the tower is active or not.
         self.tower_active = False
+        # Current tower's damage.
         self.damage = float(0.16)
+        # Tower's damage multiplier when the tower is being upgraded.
         self.damagex = 1.4
+        # Shooting range radius of the tower.
         self.shoot_radius = 130
         #
         self._upload_upgrade_tower_images()
-        #
+        # One time use int variable.
         self.plus = 0
 
     def update(self):
@@ -861,7 +945,8 @@ class Tower4():
                 self._check_if_spawn_is_available()
 
     def draw(self):
-        ''' Drawying everything on the screen. '''
+        ''' Drawying all images of the tower on the screen/surface. '''
+
         if self.circle_active:
             self.screen.blit(self.circle, self.circle_rect)
             if not self.max:
@@ -956,8 +1041,9 @@ class Tower4():
 
 
     def shoot_range(self):
+        ''' Calculating the shooting range. '''
+
         if self.tower_active:
-            ''' Calculating the shooting range. '''
             if len(self.main_game.enemies) == 0:
                 self.reset_rock_position()
 
@@ -986,7 +1072,7 @@ class Tower4():
             self.reset_rock_position()
             self.fire_count = 0
             self.main_game.enemies.remove(enemy)
-            self.main_game.money += 50
+            self.main_game.money += enemy.bonus
 
     def shot_fire_animation_setup(self):
         ''' Animation of damage made for the enemies. '''
@@ -1003,6 +1089,7 @@ class Tower4():
             self.shot_rect.center = (self.rect2.centerx - 4, self.rect2.top - 44)
 
     def shot_fired(self, enemy):
+        ''' Calculating the distance between the enemie and the 'bullet'. '''
         if self.fire_count == 0:
             self.locked_x = (enemy.rect.centerx -
                              self.shot_rect.x) / 30
@@ -1019,6 +1106,8 @@ class Tower4():
         self.fire_count += 1
 
     def update_tower_location(self):
+        ''' Updating tower's location while it's being dragged to final destination. '''
+
         self.rect1.center = (self.rect2.centerx - 20, self.rect2.centery - 30)
         self.rect3.center = (self.rect2.centerx + 13, self.rect2.centery - 30)
         self.reset_rock_position()
@@ -1030,9 +1119,13 @@ class Tower4():
             del self.main_game.towers[-1]
 
     def activate_circle(self):
+        ''' Updating circle's location so it's center
+            would be in the middle of the tower. '''
         self.circle_rect.center = self.rect2.center
 
     def _upload_upgrade_tower_images(self):
+        ''' Loading upgrade icon images to the game. '''
+
         self.upgrade_img = pygame.transform.scale(pygame.image.load(
             'images_final/Towers/Upgrade_tower/brown_rock.png').convert_alpha(), (60, 90))
         self.upgrade_img_rect = self.upgrade_img.get_rect(
@@ -1045,6 +1138,8 @@ class Tower4():
             bottomleft=(self.upgrade_img_rect.bottomleft))
 
     def _update_n_draw_tower_upgrade(self):
+        ''' Updating and drawying tower's upgrade cost and it's image. '''
+
         self.upgrade_font_surface = self.upgrade_font.render(
             f'{self.cost}', True, (255, 200, 0))
         self.upgrade_font_rect = self.upgrade_font_surface.get_rect(
@@ -1054,6 +1149,9 @@ class Tower4():
         self.screen.blit(self.upgrade_font_surface, self.upgrade_font_rect)
 
     def _check_upgrade_collision(self, mouse_pos):
+        ''' Checking if there is collision between the tower's
+            upgrade image rectangle and player's mouse coordinates. '''
+
         if self.upgrade_img_rect.collidepoint(mouse_pos):
             if self.cost <= self.main_game.money:
                 if self.level == 1:
@@ -1062,12 +1160,16 @@ class Tower4():
                     self.setup_level3()
 
     def _check_for_money(self):
+        ''' Checking if player has enough money to get the tower.'''
+
         if self.cost > self.main_game.money:
             self.delete = True
         else:
             self.main_game.money -= self.cost
 
     def _check_if_spawn_is_available(self):
+        ''' Checking if the location of the tower is available. '''
+
         for rect in self.main_game.available_spots:
             if rect.collidepoint((self.rect2.centerx, self.rect2.bottom - 20)):
                 return

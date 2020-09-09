@@ -1,23 +1,35 @@
 import pygame
 class StartGame():
+    ''' The screen when game is started (main menu). '''
 
     def __init__(self, game):
+        # creating an access to the main game's variables.
         self.main_game = game
 
+        # Loading main menu image.
         self.menu_image = pygame.image.load('images_final/menu/menu.png')
+
+        # Creating a play button.
         self.play_button = pygame.Rect((436, 272), (136, 141))
 
-        self._setup_settings()
+        self._setup_for_menu_settings()
 
+        # Bool switch for menu mode.
         self.menu = True
+
+        # Bool switch for settings mode.
         self.settings = False
 
+        # Bool switch to determine if the game active or not.
         self.active_game = False
 
+        # Bool switches for music and sounds of the game.
         self.music = True
         self.sound = True
 
     def _pressing_buttons(self, mouse_pos):
+        ''' Responding to player's inputs while game is in menu mode. '''
+
         if not self.active_game:
             if self.play_button.collidepoint(mouse_pos) and not self.settings:
                 self.menu = False
@@ -44,7 +56,10 @@ class StartGame():
                 else:
                     self.sound = True
 
-    def _setup_settings(self):
+    def _setup_for_menu_settings(self):
+        ''' Loading images and creating rects for collision
+            between player's inputs and menu's images. '''
+
         self.main_image = self.menu_image
         self.settings_image = pygame.image.load(
             'images_final/menu/settings.png')
@@ -66,6 +81,7 @@ class StartGame():
             center=(553, 380))
 
     def draw(self):
+        ''' Drawying music, sound on/off images to the surface/screen. '''
 
         if self.music:
             self.settings_image.blit(

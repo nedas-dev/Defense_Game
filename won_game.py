@@ -1,7 +1,7 @@
 import pygame
 
 class WonGame():
-
+    ''' The images player sees when the game is won. '''
     def __init__(self, game):
         self.main_game = game
 
@@ -36,9 +36,13 @@ class WonGame():
             self.won_active = False
             self.main_game.start_game.menu = True
             self.main_game.start_game.active_game = False
+            self.main_game.level1.reset()
+            self.main_game._reset_game()
+            self.main_game.level1.switch = True
 
         if self.won_active == True and self.continue_button.collidepoint(mouse_pos):
             self.won_active = False
             self.main_game.start_game.active_game = True
             self.main_game._reset_game()
             self.main_game.level1.reset()
+            self.main_game.level1.switch = True
