@@ -20,3 +20,4 @@ class GameOver():
         if self.game_over == True:
             if self.restart_button_rect.collidepoint(mouse_pos):
                 self.main_game._reset_game()
+                self.main_game.level1.reset()

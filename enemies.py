@@ -43,6 +43,8 @@ class Enemy1():
         # Creating a health bar above the enemy
         self.health_bar_setup()
 
+        # Money the player will get for killing the enemy
+        self.bonus = 50
     def draw(self):
         ''' Drawying the enemy to the screen. '''
         self.main_game.screen.blit(self.image, self.rect)
@@ -211,6 +213,9 @@ class Enemy2():
 
         # Creating a health bar above the enemy
         self.health_bar_setup()
+
+        # Money the player will get for killing the enemy
+        self.bonus = 65
 
     def draw(self):
         ''' Drawying the enemy to the screen. '''
@@ -383,6 +388,8 @@ class Enemy3():
         # Creating a health bar above the enemy
         self.health_bar_setup()
 
+        # Money the player will get for killing the enemy
+        self.bonus = 75
     def draw(self):
         ''' Drawying the enemy to the screen. '''
         self.main_game.screen.blit(self.image, self.rect)
@@ -553,7 +560,8 @@ class Enemy4():
 
         # Creating a health bar above the enemy
         self.health_bar_setup()
-
+        # Money the player will get for killing the enemy
+        self.bonus = 100
     def draw(self):
         ''' Drawying the enemy to the screen. '''
         self.main_game.screen.blit(self.image, self.rect)

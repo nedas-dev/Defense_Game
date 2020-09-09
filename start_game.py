@@ -22,6 +22,7 @@ class StartGame():
             if self.play_button.collidepoint(mouse_pos) and not self.settings:
                 self.menu = False
                 self.active_game = True
+                self.main_game.won_game.won_active = False
             elif self.settings_button.collidepoint(mouse_pos) and not self.settings:
                 self.main_image = self.settings_image
                 self.settings = True

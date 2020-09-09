@@ -162,7 +162,7 @@ class Tower1():
             self.reset_rock_position()
             self.fire_count = 0
             self.main_game.enemies.remove(enemy)
-            self.main_game.money += 50
+            self.main_game.money += enemy.bonus
 
     def shot_fire_animation_setup(self):
         ''' Animation of damage made for the enemies. '''
@@ -206,10 +206,10 @@ class Tower1():
         self.circle_rect.center = self.rect2.center
 
     def _check_for_money(self):
-        if self.main_game.money >= self.cost:
-            self.main_game.money -= self.cost - 500
-        else:
+        if self.cost > self.main_game.money:
             self.delete = True
+        else:
+            self.main_game.money -= self.cost
 
     def _upload_upgrade_tower_images(self):
         self.upgrade_img = pygame.transform.scale(pygame.image.load(
@@ -240,11 +240,6 @@ class Tower1():
                 elif self.level == 2:
                     self.setup_level3()
 
-    def _check_for_money(self):
-        if self.cost > self.main_game.money:
-            self.delete = True
-        else:
-            self.main_game.money -= self.cost
 
     def _check_if_spawn_is_available(self):
         for rect in self.main_game.available_spots:
@@ -476,10 +471,10 @@ class Tower2():
         self.circle_rect.center = self.rect2.center
 
     def _check_for_money(self):
-        if self.main_game.money >= self.cost:
-            self.main_game.money -= self.cost - 500
-        else:
+        if self.cost > self.main_game.money:
             self.delete = True
+        else:
+            self.main_game.money -= self.cost
 
     def _upload_upgrade_tower_images(self):
         self.upgrade_img = pygame.transform.scale(pygame.image.load(
@@ -509,12 +504,6 @@ class Tower2():
                     self.setup_level2()
                 elif self.level == 2:
                     self.setup_level3()
-
-    def _check_for_money(self):
-        if self.cost > self.main_game.money:
-            self.delete = True
-        else:
-            self.main_game.money -= self.cost
 
     def _check_if_spawn_is_available(self):
         for rect in self.main_game.available_spots:
@@ -753,12 +742,6 @@ class Tower3():
 
     def activate_circle(self):
         self.circle_rect.center = self.rect2.center
-
-    def _check_for_money(self):
-        if self.main_game.money >= self.cost:
-            self.main_game.money -= self.cost - 500
-        else:
-            self.delete = True
 
     def _upload_upgrade_tower_images(self):
         self.upgrade_img = pygame.transform.scale(pygame.image.load(
@@ -1048,12 +1031,6 @@ class Tower4():
 
     def activate_circle(self):
         self.circle_rect.center = self.rect2.center
-
-    def _check_for_money(self):
-        if self.main_game.money >= self.cost:
-            self.main_game.money -= self.cost - 500
-        else:
-            self.delete = True
 
     def _upload_upgrade_tower_images(self):
         self.upgrade_img = pygame.transform.scale(pygame.image.load(

@@ -8,13 +8,14 @@ from upgrade_bars import TowerMenu
 from game_over import GameOver
 from start_game import StartGame
 from won_game import WonGame
+from levels import Level1
 
 class MainGame():
 
     def __init__(self):
         ''' Initializing the game, setting up display '''
         pygame.init()
-
+        self.xsas = 1
         self.clock = pygame.time.Clock()
         self.settings = Settings()
         self.screen = pygame.display.set_mode(
@@ -33,7 +34,7 @@ class MainGame():
         self.towers = []
 
         self.lives = 10
-        self.money = 10000
+        self.money = 1500
 
         self._important_setup()
 
@@ -46,8 +47,6 @@ class MainGame():
                 self.update_images()
                 self.draw_images()
                 self._draw_update_font()
-                if self.enemies:
-                    print(self.path[self.enemies[0].counter])
             elif self.game_over.game_over:
                 self.screen.blit(self.game_over.game_over_img,
                                  self.game_over.game_over_rect)
@@ -71,29 +70,26 @@ class MainGame():
     def event_check(self):
         ''' Checks player's inputs (buttons pressed / mouse clicked and etc.) '''
         for event in pygame.event.get():
+
+            self.level1.check_events(event)
+
             if event.type == pygame.QUIT:
                 sys.exit()
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_q:
                     sys.exit()
-                elif event.key == pygame.K_k:
-                    self._create_enemy('enemy2')
-                elif event.key == pygame.K_j:
-                    self._create_enemy('enemy1')
-                elif event.key == pygame.K_h:
-                    self._create_enemy('enemy3')
-                elif event.key == pygame.K_g:
-                    self._create_enemy('enemy4')
 
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 position = event.pos
                 print(position)
-                self._tower_upgrade_collision(event.pos)
-                self._selected_tower_control(event.type, position)
+                if not self.game_over.game_over and self.start_game.active_game and not self.won_game.won_active:
+                    self._tower_upgrade_collision(event.pos)
+                    self._selected_tower_control(event.type, position)
                 self.game_over._checking_collision_with_restart_button(
                     position)
                 self.start_game._pressing_buttons(position)
+                self.won_game.update(event.pos)
 
             if event.type == pygame.MOUSEMOTION:
                 position = event.pos
@@ -122,24 +118,32 @@ class MainGame():
             self.towers.append(tower1)
             return tower1
         elif name == 'Tower2':
-            tower2 = Tower2(self, 362, 537)
+            tower2 = Tower2(self, 156, 537)
             self.towers.append(tower2)
             return tower2
         elif name == 'Tower3':
-            tower3 = Tower3(self, 362, 537)
+            tower3 = Tower3(self, 54, 537)
             self.towers.append(tower3)
             return tower3
         elif name == 'Tower4':
-            tower4 = Tower4(self, 362, 537)
+            tower4 = Tower4(self, 260, 537)
             self.towers.append(tower4)
             return tower4
 
     def update_images(self):
         ''' Updating every object/image in the game. '''
 
-        if not pygame.mixer.music.get_busy():
-            pygame.mixer.music.play(1)
-            pygame.mixer.music.queue('images_final/menu/music.mp3')
+        self._update_music()
+
+        self.level1.update()
+        if self.xsas == 1:
+            self.won_game.won_active = True
+            self.xsas+=1
+        if len(self.enemies) == 0 and self.level1.font_timer == -1 and not self.level1.current_wave == 11:
+            self.level1.font_timer = 0
+
+        if len(self.enemies) == 0 and self.level1.font_timer == -1 and self.level1.current_wave == 11:
+            self.won_game.won_active = True
 
         if self.lives <= 0:
             self.game_over.game_over = True
@@ -176,6 +180,9 @@ class MainGame():
 
         # Draw tower menu
         self.tower_menu.draw()
+
+        # announcements about which wave is coming (drawying font)
+        self.level1.draw()
 
     def _activate_tower_upgrade_screen(self, mouse_pos):
         for tower in self.towers:
@@ -237,14 +244,14 @@ class MainGame():
         self.game_over.game_over = False
         self.lives = 10
         self._update_lives_images()
-        self.money = 1000
+        self.money = 1500
         self._draw_update_font()
 
     def _setup_font(self):
-        self.beautiful = pygame.font.SysFont('metallord', 40)
+        self.money_font = pygame.font.SysFont('metallord', 40)
 
     def _draw_update_font(self):
-        self.text = self.beautiful.render(f'{self.money}', True, (255, 200, 0))
+        self.text = self.money_font.render(f'{self.money}', True, (255, 200, 0))
         self.text_rect = self.text.get_rect(midleft=(self.star_rect.right +
                                                      10, self.star_rect.centery))
         self.screen.blit(self.text, self.text_rect)
@@ -264,11 +271,13 @@ class MainGame():
     def _important_setup(self):
         # Creating an instance of tower1
         self.tower1 = Tower1(self, -100, -100)
+        self.money += self.tower1.cost_history
         self.tower2 = Tower2(self, -100, -100)
+        self.money += self.tower2.cost_history
         self.tower3 = Tower3(self, -100, -100)
+        self.money += self.tower3.cost_history
         self.tower4 = Tower4(self, -100, -100)
-
-        self.money += int((self.tower1.cost_history + self.tower2.cost_history + self.tower3.cost_history + self.tower4.cost_history))
+        self.money += self.tower4.cost_history
 
         # Creating an instance of tower's menu
         self.tower_menu = TowerMenu(self)
@@ -284,12 +293,18 @@ class MainGame():
         self.start_game = StartGame(self)
         self._play_music()
         self.won_game = WonGame(self)
+        self.level1 = Level1(self)
 
     def _play_music(self):
         pygame.mixer.music.load('images_final/menu/music.mp3')
         pygame.mixer.music.set_volume(0.5)
         pygame.mixer.music.play(1)
         pygame.mixer.music.queue('images_final/menu/music1.mp3')
+
+    def _update_music(self):
+        if not pygame.mixer.music.get_busy():
+            pygame.mixer.music.play(1)
+            pygame.mixer.music.queue('images_final/menu/music.mp3')
 
 if __name__ == '__main__':
     thegame = MainGame()
