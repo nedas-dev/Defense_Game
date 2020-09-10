@@ -1,7 +1,9 @@
 import pygame
 
+
 class WonGame():
     ''' The images player sees when the game is won. '''
+
     def __init__(self, game):
         self.main_game = game
 

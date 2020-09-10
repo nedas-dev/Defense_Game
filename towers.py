@@ -65,7 +65,7 @@ class Tower1():
                 self._check_if_spawn_is_available()
 
     def draw(self):
-        ''' Drawying all images of the tower on the screen/surface. '''
+        ''' drawing all images of the tower on the screen/surface. '''
 
         if self.circle_active:
             self.screen.blit(self.circle, self.circle_rect)
@@ -242,7 +242,7 @@ class Tower1():
             bottomleft=(self.upgrade_img_rect.bottomleft))
 
     def _update_n_draw_tower_upgrade(self):
-        ''' Updating and drawying tower's upgrade cost and it's image. '''
+        ''' Updating and drawing tower's upgrade cost and it's image. '''
 
         self.upgrade_font_surface = self.upgrade_font.render(
             f'{self.cost}', True, (255, 200, 0))
@@ -357,7 +357,7 @@ class Tower2():
                 self._check_if_spawn_is_available()
 
     def draw(self):
-        ''' Drawying all images of the tower on the screen/surface. '''
+        ''' drawing all images of the tower on the screen/surface. '''
 
         if self.circle_active:
             self.screen.blit(self.circle, self.circle_rect)
@@ -533,7 +533,7 @@ class Tower2():
             bottomleft=(self.upgrade_img_rect.bottomleft))
 
     def _update_n_draw_tower_upgrade(self):
-        ''' Updating and drawying tower's upgrade cost and it's image. '''
+        ''' Updating and drawing tower's upgrade cost and it's image. '''
 
         self.upgrade_font_surface = self.upgrade_font.render(
             f'{self.cost}', True, (255, 200, 0))
@@ -644,7 +644,7 @@ class Tower3():
                 self._check_if_spawn_is_available()
 
     def draw(self):
-        ''' Drawying all images of the tower on the screen/surface. '''
+        ''' drawing all images of the tower on the screen/surface. '''
 
         if self.circle_active:
             self.screen.blit(self.circle, self.circle_rect)
@@ -823,7 +823,7 @@ class Tower3():
             bottomleft=(self.upgrade_img_rect.bottomleft))
 
     def _update_n_draw_tower_upgrade(self):
-        ''' Updating and drawying tower's upgrade cost and it's image. '''
+        ''' Updating and drawing tower's upgrade cost and it's image. '''
 
         self.upgrade_font_surface = self.upgrade_font.render(
             f'{self.cost}', True, (255, 200, 0))
@@ -945,7 +945,7 @@ class Tower4():
                 self._check_if_spawn_is_available()
 
     def draw(self):
-        ''' Drawying all images of the tower on the screen/surface. '''
+        ''' drawing all images of the tower on the screen/surface. '''
 
         if self.circle_active:
             self.screen.blit(self.circle, self.circle_rect)
@@ -1138,7 +1138,7 @@ class Tower4():
             bottomleft=(self.upgrade_img_rect.bottomleft))
 
     def _update_n_draw_tower_upgrade(self):
-        ''' Updating and drawying tower's upgrade cost and it's image. '''
+        ''' Updating and drawing tower's upgrade cost and it's image. '''
 
         self.upgrade_font_surface = self.upgrade_font.render(
             f'{self.cost}', True, (255, 200, 0))

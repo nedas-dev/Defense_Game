@@ -81,7 +81,7 @@ class StartGame():
             center=(553, 380))
 
     def draw(self):
-        ''' Drawying music, sound on/off images to the surface/screen. '''
+        ''' Drawing music, sound on/off images to the surface/screen. '''
 
         if self.music:
             self.settings_image.blit(

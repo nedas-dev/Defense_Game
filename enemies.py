@@ -46,7 +46,7 @@ class Enemy1():
         # Money the player will get for killing the enemy
         self.bonus = 50
     def draw(self):
-        ''' Drawying the enemy to the screen. '''
+        ''' Drawing the enemy to the screen. '''
         self.main_game.screen.blit(self.image, self.rect)
         self.main_game.screen.blit(self.health_bar_img, self.health_rect)
 
@@ -218,7 +218,7 @@ class Enemy2():
         self.bonus = 65
 
     def draw(self):
-        ''' Drawying the enemy to the screen. '''
+        ''' Drawing the enemy to the screen. '''
         self.main_game.screen.blit(self.image, self.rect)
         self.main_game.screen.blit(self.health_bar_img, self.health_rect)
 
@@ -392,7 +392,7 @@ class Enemy3():
         # Money the player will get for killing the enemy
         self.bonus = 75
     def draw(self):
-        ''' Drawying the enemy to the screen. '''
+        ''' Drawing the enemy to the screen. '''
         self.main_game.screen.blit(self.image, self.rect)
         self.main_game.screen.blit(self.health_bar_img, self.health_rect)
 
@@ -564,7 +564,7 @@ class Enemy4():
         # Money the player will get for killing the enemy
         self.bonus = 100
     def draw(self):
-        ''' Drawying the enemy to the screen. '''
+        ''' Drawing the enemy to the screen. '''
         self.main_game.screen.blit(self.image, self.rect)
         self.main_game.screen.blit(self.health_bar_img, self.health_rect)
 

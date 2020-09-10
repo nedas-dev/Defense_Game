@@ -1,7 +1,9 @@
 import pygame
 
+
 class TowerMenu():
     ''' Towers menu on the bottom of the screen. '''
+
     def __init__(self, game):
 
         self.main_game = game
@@ -13,16 +15,20 @@ class TowerMenu():
             midbottom=(210, self.main_game.rect.bottom))
 
     def draw(self):
-        ''' Drawying the tower menu to the surface. '''
+        ''' Drawing the tower menu to the surface. '''
         self.main_game.screen.blit(self.image, self.rect)
 
     def check_collision(self, mouse_pos):
         ''' Checking collision with specific tower's icon (in tower menu). '''
         if self.main_game.tower1.rect_around_icon.collidepoint(mouse_pos):
-            self.main_game.selected_tower = self.main_game._create_tower('Tower1')
+            self.main_game.selected_tower = self.main_game._create_tower(
+                'Tower1')
         elif self.main_game.tower2.rect_around_icon.collidepoint(mouse_pos):
-            self.main_game.selected_tower = self.main_game._create_tower('Tower2')
+            self.main_game.selected_tower = self.main_game._create_tower(
+                'Tower2')
         elif self.main_game.tower3.rect_around_icon.collidepoint(mouse_pos):
-            self.main_game.selected_tower = self.main_game._create_tower('Tower3')
+            self.main_game.selected_tower = self.main_game._create_tower(
+                'Tower3')
         elif self.main_game.tower4.rect_around_icon.collidepoint(mouse_pos):
-            self.main_game.selected_tower = self.main_game._create_tower('Tower4')
+            self.main_game.selected_tower = self.main_game._create_tower(
+                'Tower4')

@@ -50,7 +50,7 @@ class Level1():
                 center=(self.main_game.rect.center))
 
     def draw(self):
-        ''' Drawying the text to the surface of which wave is comming.
+        ''' Drawing the text to the surface of which wave is comming.
             Adding some visual effects to it (180 degree turn). '''
 
         if 0 <= self.font_timer < 180:

@@ -184,7 +184,7 @@ class MainGame():
                 tower.update()
 
     def draw_images(self):
-        ''' Drawying all the images to game's screen when
+        ''' drawing all the images to game's screen when
             the game is active. '''
         if not self.pause:
             self.screen.blit(self.settings.bg, (0, 0))
@@ -213,7 +213,7 @@ class MainGame():
             # Draw tower menu
             self.tower_menu.draw()
 
-            # announcements about which wave is coming (drawying font)
+            # announcements about which wave is coming (drawing font)
             self.level1.draw()
         else:
             self._draw_pause_button()
@@ -392,7 +392,7 @@ class MainGame():
         self.play_button = pygame.transform.scale(pygame.image.load('images_final/Pause/button_play.png'), (80,80))
 
     def _draw_pause_button(self):
-        ''' Drawying pause button the screen when needed. '''
+        ''' drawing pause button the screen when needed. '''
 
         if self.pause:
             self.screen.blit(self.play_button, self.pause_button_rect)

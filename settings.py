@@ -9,7 +9,7 @@ class Settings():
         self.screen_width = 1000
         self.screen_height = 600
 
-        # Amount of money player will have in the begginng of the game.
+        # Amount of money player will have in the beggining of the game.
         self.money = 1500
 
         # Uploading backround image
